@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.core.exceptions import ValidationError
 from django.contrib.auth.hashers import make_password
-from .models import ConsumerModel
+from .models import UserModel
 
 class ConsumerSignUPSerializer(serializers.Serializer):
     email = serializers.EmailField()
@@ -9,7 +9,7 @@ class ConsumerSignUPSerializer(serializers.Serializer):
     confirm_password = serializers.CharField(write_only = True)
     
     class Meta:
-        model = ConsumerModel
+        model = UserModel
         fields = ["email", "password", "confirm_password"]
     
     
@@ -28,7 +28,7 @@ class ConsumerSignUPSerializer(serializers.Serializer):
         validated_data["password"] = make_password(password)
         
         
-        return ConsumerModel.objects.create(**validated_data)
+        return UserModel.objects.create(**validated_data)
         
 
 
