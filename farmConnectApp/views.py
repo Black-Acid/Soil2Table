@@ -6,26 +6,16 @@ from .serializers import ConsumerSignUPSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from django.db.utils import IntegrityError
+import json
+from rest_framework.views import APIView
+
 from rest_framework.decorators import api_view
 
 
-@api_view(["POST"])
-def consumerSignUp(request):
-    if request.method == "POST":
-        serializer = ConsumerSignUPSerializer(data=request.data)
-        
-        if serializer.is_valid():
-            try:
-                serializer.save()
-                return Response({"message": "User has been saved Succesffuly"}, status=status.HTTP_201_CREATED)
-            except IntegrityError:
-                return Response({"error:", "Email Already exists"}, status=status.HTTP_400_BAD_REQUEST)
-        
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
-
-def farmerSignUp(request):
-    pass
+class ConsumerSignUP(APIView):
+    def post(self, request):
+        print(request.data)
+        return Response("Message Recieved successfuly")
 
 
 
