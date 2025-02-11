@@ -1,35 +1,40 @@
 from rest_framework import serializers
 from django.core.exceptions import ValidationError
 from django.contrib.auth.hashers import make_password
-from .models import UserModel
+from .models import UserModel, FarmDetailsModel
 
-class ConsumerSignUPSerializer(serializers.Serializer):
-    email = serializers.EmailField()
-    password = serializers.CharField(write_only = True)
-    confirm_password = serializers.CharField(write_only = True)
+
+
+class FarmSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = FarmDetailsModel
+        fields = "__all__"
+
+class ConsumerSignUpSerializer(serializers.ModelSerializer):
+    farm = FarmSerializer(many=True, read_only=True)
     
     class Meta:
         model = UserModel
-        fields = ["email", "password", "confirm_password"]
-    
-    
-    def validate(self, attrs):
-        password = attrs.get("password")
-        confirm_password = attrs.get("confirm_password")
-        
-        if password != confirm_password:
-            raise serializers.ValidationError("Passwords must Match")
-        
-        return attrs
-    
+        fields = "__all__"
+        extra_kwargs = {"password": {"write_only": True}}
+
+
     def create(self, validated_data):
-        validated_data.pop("confirm_password")
-        password = validated_data.get("password")
-        validated_data["password"] = make_password(password)
-        
-        
+        validated_data["password"] = make_password(validated_data["password"])
         return UserModel.objects.create(**validated_data)
-        
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

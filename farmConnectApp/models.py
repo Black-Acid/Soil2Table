@@ -25,9 +25,8 @@ class UserModel(models.Model):
         return f"{self.username} ({self.role})"
 
     
-# Can be modified here there is no point in having farmers name saved on the Users table
 class FarmDetailsModel(models.Model):
-    user = models.ForeignKey(UserModel, on_delete=models.CASCADE, limit_choices_to={'role': 'Farmer'})
+    user = models.ForeignKey(UserModel, on_delete=models.CASCADE, limit_choices_to={'role': 'Farmer'}, related_name="farm")
     farm_name = models.CharField(max_length=255)
     location = models.CharField(max_length=255)
     rating = models.IntegerField(choices=[(i, i) for i in range(1, 6)])
