@@ -1,6 +1,6 @@
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.views import APIView
 
 
@@ -20,7 +20,7 @@ class ConsumerSignUP(APIView):
 # the consumer's signup
 
 class SignUp(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     
     def post(self, request):
         serializer = ConsumerSignUpSerializer(data=request.data)
