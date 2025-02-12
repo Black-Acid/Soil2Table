@@ -11,7 +11,7 @@ class FarmSerializer(serializers.ModelSerializer):
         model = FarmDetailsModel
         fields = "__all__"
 
-class ConsumerSignUpSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     farm = FarmSerializer(many=True, read_only=True)
     
     class Meta:
@@ -21,7 +21,7 @@ class ConsumerSignUpSerializer(serializers.ModelSerializer):
 
 
     def create(self, validated_data):
-        validated_data["password"] = make_password(validated_data["password"])
+        validated_data["password"] = make_password(validated_data["password"]) # if frontend will be checking this then there will be no need for this
         return UserModel.objects.create(**validated_data)
 
 
