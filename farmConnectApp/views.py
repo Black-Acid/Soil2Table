@@ -3,7 +3,7 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.views import APIView
 # from rest_framework_simplejwt.tokens import RefreshToken
-
+from rest_framework.authtoken.models import Token
 
 from django.contrib.auth import authenticate
 
@@ -31,16 +31,16 @@ class RegisterUser(APIView):
 
 class LoginView(APIView):
     def post(self, request):
-        email = request.data.get("username")
+        email = request.data.get("email")
         password = request.data.get("password")
         
-        user = authenticate(email=email, password=password)
-        
+        user = authenticate(request, email=email, password=password)
+        print(user)
         if user:
-            return Response("Your name has been identified you can login and see")
-            # if the user has a account then we will give the user a refresh token and an access token
+            token, created = Token.objects.get_or_create(user=user)
+            return Response({"token": token.key, "your Name": f"{user.username}"}, status=status.HTTP_200_OK)
         else:
-            return Response("I still can't find you in our system")
+            return Response({"error": "Invalid email or password"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 class FarmerDashboard(APIView):
